@@ -23,28 +23,45 @@ function addVisualOverlay() {
     // Create Tampermonkey Overlay DIV for OWA
     // <div class="_n_n ms-bg-color-themePrimary" style="height: 30px;"></div>
     //$(".conductorContent").append("<div style=\"height: 60px;\" class=\"owaOverlay\">OWA Overlay</div>");
-    $("body").append("<div class=\"tmCRMOverlay\">CRM Overlay</div>");
+    $("body").append("<div class=\"tmCRMOverlay\"></div>");
     var overlay = $(".tmCRMOverlay");
-    $(overlay).attr("style", "height: 10rem; width: 95%; position: absolute; top: 1.5rem; background-color: #4f4f4f; z-index: 10000; color: #05ff47; border: solid 2px #05ff47; font-size:0.8rem; left: 2.5%");
-    $(overlay).append("<button class=\"tmFillCreateDialogBtn\">");
-    $(overlay).append("<textarea class=\"tmCalendarInputData\">");
-    $(overlay).append("<div class=\"tmCloseOverlay\">[X]</div>");
+    $(overlay).attr("style", "height: 10rem; width: 60%; position: absolute; top: 6rem; background-color: rgba(70,70,70,0.7); z-index: 10000; color: rgb(0,0,0); border: solid 2px rgb(70,70,70,0.8); font-size:0.8rem; right: 1%");
+    $(overlay).append("<div class=\"tmOverlayContent\"></div>");
+    $(overlay).append("<div class=\"tmOverlayTitle\">CRM Overlay</div>");
+    $(overlay).append("<div class=\"tmCloseButton\">[X]</div>");
+    var tmOverlayTitle = $(".tmOverlayTitle");
+    $(tmOverlayTitle).attr("style", "position:absolute; top:0.5rem; left:0.5rem; font-weight:bold; cursor:pointer;color:rgb(255,255,255);");
+    $(".tmOverlayTitle").click(function() {toggleDisplayMode();});
+    var tmCloseButton = $(".tmCloseButton");
+    $(tmCloseButton).attr("style", "position:absolute; top:0.5rem; right:0.5rem; font-weight:bold; cursor:pointer;color:rgb(255,255,255);");
+    $(tmCloseButton).click(function() {closeOverlay();});
+    var tmOverlayContent = $(".tmOverlayContent");
 
-    var tmCloseOverlay = $(".tmCloseOverlay");
-    $(tmCloseOverlay).attr("style", "position:absolute; top: 0rem; right: 0.2rem; cursor:pointer;");
-    $(tmCloseOverlay).click(function() {$(overlay).hide()});
+    $(tmOverlayContent).append("<button class=\"tmFillCreateDialogBtn\">");
+    $(tmOverlayContent).append("<textarea class=\"tmCalendarInputData\">");
 
     var tmCalendarInputData = $(".tmCalendarInputData");
     $(tmCalendarInputData).attr("rows", "8");
-    $(tmCalendarInputData).attr("style", "height: 8rem; width: 20rem");
-    $(tmCalendarInputData).val("Danske Bank A/S#AP#DUMMY#2021-01-31#0.5\n"); // TEMP
+    $(tmCalendarInputData).attr("placeholder", "Please paste exported calendar items here");
+    $(tmCalendarInputData).attr("style", "position:absolute; bottom:0.5rem; left:7.5rem; height: 8rem; width: 42rem");
+    $(tmCalendarInputData).val("SF#Danske Bank A/S#AP#DUMMY#2021-01-31#0.5\n"); // TEMP
 
     var tmFillCreateDialogBtn = $(".tmFillCreateDialogBtn");
-    $(tmFillCreateDialogBtn).attr("style", "height: 2rem; width: 6em");
-    $(tmFillCreateDialogBtn).html("Start");
+    $(tmFillCreateDialogBtn).attr("style", "position:absolute; bottom:0.5rem; left:0.5rem; height: 2rem; width: 6rem");
+    $(tmFillCreateDialogBtn).html("Import");
     $(tmFillCreateDialogBtn).click(function() {console.clear(); openCreateItemDialog();});
     logInfo("Adding visual overlay done.");
 };
+
+function closeOverlay() {
+    $(".tmCRMOverlay").hide();
+}
+
+function toggleDisplayMode() {
+    var isCollapsed = $(".tmCRMOverlay").hasClass("collapsed");
+    if(isCollapsed) { $(".tmCRMOverlay").height("10rem"); $(".tmCRMOverlay").removeClass("collapsed"); $(".tmOverlayContent").show(); }
+    else { $(".tmCRMOverlay").addClass("collapsed"); $(".tmCRMOverlay").height("2.2rem"); $(".tmOverlayContent").hide(); }
+}
 
 function openCreateItemDialog() {
     //$("div.flexipageComponent[data-component-id=BTSEditTask]").find("button").click();
@@ -62,6 +79,7 @@ function openCreateItemDialog() {
         else if(activityAcronym == "AP") activity = "Account Planning [Management]";
         else if(activityAcronym == "AR") activity = "Architecture Review [Architecture]";
         else if(activityAcronym == "PE") activity = "Partner enablement/support [Management]";
+        else if(activityAcronym == "GID") activity = "Immersion Day - General [Workshops]";
         var subject = itemTokens[2].trim();
         var date = itemTokens[3].trim();
         var timeSpent = itemTokens[4].trim();
