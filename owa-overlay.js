@@ -29,6 +29,7 @@ function addVisualOverlay() {
     $(overlay).append("<div class=\"tmOverlayContent\"></div>");
     $(overlay).append("<div class=\"tmOverlayTitle\">OWA Overlay</div>");
     $(overlay).append("<div class=\"tmCloseButton\">[X]</div>");
+    $(overlay).append("<input type=\"text\" class=\"tmPickupToken\">");
     var tmOverlayTitle = $(".tmOverlayTitle");
     $(tmOverlayTitle).attr("style", "position:absolute; top:0.5rem; left:0.5rem; font-weight:bold; cursor:pointer;");
     $(".tmOverlayTitle").click(function() {toggleDisplayMode();});
@@ -44,7 +45,15 @@ function addVisualOverlay() {
     $(findCalendarItemsBtn).attr("style", "height: 2rem; width: 6rem; position:absolute; bottom:0.5rem; left:0.5rem;");
     $(findCalendarItemsBtn).html("Export Items");
     $(findCalendarItemsBtn).click(function() {findCalendarItems($("._cb_c1"),0);});
-
+    var tmPickupToken = $(".tmPickupToken");
+    $(tmPickupToken).attr("style", "height: 1.7rem; width: 5.5rem; position:absolute; bottom:3.0rem; left:0.5rem;");
+    $(tmPickupToken).attr("placeholder", "Pickup token");
+    var pickupToken=$.cookie("pickupToken");
+    if(pickupToken) $(tmPickupToken).val(pickupToken);
+    if($(".peekPopup").length<=0) $(tmCalendarOutputData).attr("placeholder","Please click first calendar item before you begin");
+    $(".bidi").closest("div").first().click(function() {
+        setTimeout(function() { if($(".peekPopup").length>0) $(tmCalendarOutputData).attr("placeholder","Thanks. Ready to start."); }, 1000);
+    });
     logInfo("Adding visual overlay done.");
 };
 
@@ -60,13 +69,11 @@ function toggleDisplayMode() {
 
 function findCalendarItems(calendarItems, currentIndex) {
     logInfo("Finding calendar items...");
-    var pickupToken = "SF#";
+    var pickupToken = $(".tmPickupToken");
+    if(!pickupToken||pickupToken.val().length<=0) pickupToken="SF#";
+    if(pickupToken) $.cookie("pickupToken", pickupToken.val(), { expires: 100 });
     if(currentIndex>=calendarItems.length) return;
 
-    /*$("._cb_c1").each(function(index) {
-        var calendarItemTitle = $(this).html();
-        setTimeout(function() {$("._cb_c1:nth(0)").closest("div._ce_71").focus().click();var date = $(".peekPopup").find("._ck_o").html();logInfo(calendarItemTitle+"#"+date);}, 1000);
-    });*/
     setTimeout(function() {
         var calendarItemTitle = calendarItems[currentIndex].getInnerHTML();
         $("._cb_c1:nth("+currentIndex+")").closest("div._ce_71").focus().click();
