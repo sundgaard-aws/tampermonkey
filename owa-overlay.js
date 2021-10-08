@@ -90,7 +90,7 @@ function findCalendarItems(calendarItems, currentIndex) {
                 //var targetDate = fromDate.format("MMM dd, yyyy"); // Target date format Jul 5, 2021
                 var targetDate = fromDate.format("yyyy-MM-dd"); // Target date format 2021-01-31
                 logInfo(calendarItemTitle+"#"+targetDate+"#"+timeSpent);
-                if(calendarItemTitle && calendarItemTitle.startsWith(pickupToken)) $(".tmCalendarOutputData").append(calendarItemTitle+"#"+targetDate+"#"+timeSpent+"\n");
+                if(calendarItemTitle && calendarItemTitle.startsWith(pickupToken.val())) $(".tmCalendarOutputData").append(calendarItemTitle+"#"+targetDate+"#"+timeSpent+"\n");
                 findCalendarItems(calendarItems, ++currentIndex);
             }
             catch(ex) { findCalendarItems(calendarItems, currentIndex); } // try again with the same index
