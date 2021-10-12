@@ -4,8 +4,9 @@
 // @version      0.1
 // @description  Do cool stuff on top of Amazon OWA
 // @author       You
+// @match        https://ballard.amazon.com/owa/?bO=1#path=/calendar
 // @match        https://ballard.amazon.com/owa/
-// @match        https://ballard.amazon.com/owa/#path=/mail
+// @match        https://ballard.amazon.com/owa/#path=/calendar
 // @icon         https://www.google.com/s2/favicons?domain=amazon.com
 // @grant        none
 // ==/UserScript==
@@ -54,6 +55,7 @@ function addVisualOverlay() {
     $(".bidi").closest("div").first().click(function() {
         setTimeout(function() { if($(".peekPopup").length>0) $(tmCalendarOutputData).attr("placeholder","Thanks. Ready to start."); }, 1000);
     });
+    setTimeout(function() { $("._cb_C1").css("font-size", "1.3rem"); }, 2000); // Increase Size of Calendar Date Header
     logInfo("Adding visual overlay done.");
 };
 
@@ -69,9 +71,10 @@ function toggleDisplayMode() {
 
 function findCalendarItems(calendarItems, currentIndex) {
     logInfo("Finding calendar items...");
-    var pickupToken = $(".tmPickupToken");
-    if(!pickupToken||pickupToken.val().length<=0) pickupToken="SF#";
-    if(pickupToken) $.cookie("pickupToken", pickupToken.val(), { expires: 100 });
+    var pickupToken = "";
+    if($(".tmPickupToken")) pickupToken = $(".tmPickupToken").val();
+    if(!pickupToken||pickupToken.length<=0) pickupToken="SF#";
+    if(pickupToken) $.cookie("pickupToken", pickupToken, { expires: 100 });
     if(currentIndex>=calendarItems.length) return;
 
     setTimeout(function() {
@@ -90,10 +93,11 @@ function findCalendarItems(calendarItems, currentIndex) {
                 //var targetDate = fromDate.format("MMM dd, yyyy"); // Target date format Jul 5, 2021
                 var targetDate = fromDate.format("yyyy-MM-dd"); // Target date format 2021-01-31
                 logInfo(calendarItemTitle+"#"+targetDate+"#"+timeSpent);
-                if(calendarItemTitle && calendarItemTitle.startsWith(pickupToken.val())) $(".tmCalendarOutputData").append(calendarItemTitle+"#"+targetDate+"#"+timeSpent+"\n");
+                if(calendarItemTitle && calendarItemTitle.startsWith(pickupToken))
+                    $(".tmCalendarOutputData").append(calendarItemTitle+"#"+targetDate+"#"+timeSpent+"\n");
                 findCalendarItems(calendarItems, ++currentIndex);
             }
-            catch(ex) { findCalendarItems(calendarItems, currentIndex); } // try again with the same index
+            catch(ex) { logError(ex); findCalendarItems(calendarItems, currentIndex); } // try again with the same index
         }, 2300);
     }, 1500);
 
@@ -112,4 +116,8 @@ function updateAsana() {
 
 function logInfo(msg) {
     console.log("[TAMPERMONKEY-INFO]:" + msg);
+};
+
+function logError(msg) {
+    console.error("[TAMPERMONKEY-ERROR]:" + msg);
 };

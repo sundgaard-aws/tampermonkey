@@ -44,12 +44,13 @@ function addVisualOverlay() {
     $(tmCalendarInputData).attr("rows", "8");
     $(tmCalendarInputData).attr("placeholder", "Please paste exported calendar items here");
     $(tmCalendarInputData).attr("style", "position:absolute; bottom:0.5rem; left:7.5rem; height: 8rem; width: 42rem");
-    $(tmCalendarInputData).val("SF#Danske Bank A/S#AP#DUMMY#2021-01-31#0.5\n"); // TEMP
+    $(tmCalendarInputData).val("SF#Danske Bank A/S#AP#Dummy Activity#2021-01-31#0.5\n"); // TEMP
 
     var tmFillCreateDialogBtn = $(".tmFillCreateDialogBtn");
     $(tmFillCreateDialogBtn).attr("style", "position:absolute; bottom:0.5rem; left:0.5rem; height: 2rem; width: 6rem");
     $(tmFillCreateDialogBtn).html("Import");
     $(tmFillCreateDialogBtn).click(function() {console.clear(); openCreateItemDialog();});
+    setTimeout(function() { $("._cb_C1").css("font-size", "1.3rem"); }, 2000); // Increase Size of Calendar Date Header
     logInfo("Adding visual overlay done.");
 };
 
