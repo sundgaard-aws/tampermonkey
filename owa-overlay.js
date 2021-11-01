@@ -16,7 +16,6 @@
 
     logInfo("Running Tampermonkey script on top of Amazon OWA...");
     addVisualOverlay();
-    //updateAsana();
 })();
 
 function addVisualOverlay() {
