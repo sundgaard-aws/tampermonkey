@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CRM Overlay
 // @namespace    http://tampermonkey.net/
-// @version      0.1
+// @version      0.2
 // @description  try to take over the world!
 // @author       You
 // @match        https://aws-crm.lightning.force.com/lightning/page/home
@@ -74,6 +74,8 @@ function openCreateItemDialog() {
         var itemTokens = nextItem.split("#");
         if(itemTokens.length<5) return; // Fail safe
         var account = itemTokens[0].trim();
+        if(account == "NOBA") account = "Nordea Bank Abp";
+        if(account == "DABA") account = "Danske Bank A/S";
         var activityAcronym = itemTokens[1].trim();
         var activity = "Account Planning [Management]";
         if(activityAcronym == "MOH") activity = "Meeting / Office Hours [Management]";
