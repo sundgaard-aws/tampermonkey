@@ -1,11 +1,12 @@
 // ==UserScript==
 // @name         CRM Overlay
 // @namespace    http://tampermonkey.net/
-// @version      0.2
-// @description  try to take over the world!
+// @version      0.3
+// @description  Allows batch import of activities
 // @author       You
 // @match        https://aws-crm.lightning.force.com/lightning/page/home
 // @match        https://aws-crm.lightning.force.com/lightning/n/SA_Activities
+// @match        https://aws-crm.lightning.force.com/lightning/r/Report/00O4z000006Uw6tEAC/view?queryScope=userFolders
 // @icon         https://www.google.com/s2/favicons?domain=force.com
 // @grant        none
 // @require https://code.jquery.com/jquery-3.6.0.min.js
@@ -76,6 +77,7 @@ function openCreateItemDialog() {
         var account = itemTokens[0].trim();
         if(account == "NOBA") account = "Nordea Bank Abp";
         if(account == "DABA") account = "Danske Bank A/S";
+        if(account == "JND") account = "JN Data";
         var activityAcronym = itemTokens[1].trim();
         var activity = "Account Planning [Management]";
         if(activityAcronym == "MOH") activity = "Meeting / Office Hours [Management]";
@@ -96,12 +98,13 @@ function openCreateItemDialog() {
         //}
         //printDialogInputs();
 
-        logInfo("Setting account field"); setTimeout(function(){ $(".oneUtilityBarPanel").find("input:nth(1)").val(account);}, 500); // Account
+        var startIndex=0;
+        logInfo("Setting account field"); setTimeout(function(){ $(".oneUtilityBarPanel").find("input:nth("+startIndex+")").val(account);}, 500); // Account
 
         // SET DATE
         //logInfo("Setting date field"); setTimeout(function(){ $(".oneUtilityBarPanel").find("input:nth(2)").val(date); }, 1000); // Date
         setTimeout(function(){
-        $(".oneUtilityBarPanel").find("input:nth(2)").focus().click();
+        $(".oneUtilityBarPanel").find("input:nth("+startIndex+1+")").focus().click();
         }, 3500);
         setTimeout(function(){
         $(".oneUtilityBarPanel").find("td:nth(0)").attr("data-value", date); // Format "2020-01-31"
@@ -110,10 +113,10 @@ function openCreateItemDialog() {
 
 
 
-        logInfo("Setting subject field"); setTimeout(function(){ $(".oneUtilityBarPanel").find("input:nth(4)").focus().val(subject);}, 1500); // Subject
-        logInfo("Setting role field"); setTimeout(function(){ $(".oneUtilityBarPanel").find("input:nth(5)").val("SA");}, 2000); // Role
-        logInfo("Setting activity field"); setTimeout(function(){ $(".oneUtilityBarPanel").find("input:nth(6)").val(activity);}, 2500); // Activity
-        logInfo("Setting time spent"); setTimeout(function(){ $(".oneUtilityBarPanel").find("input:nth(8)").focus().val(timeSpent);}, 3000); // Time Spent
+        logInfo("Setting subject field"); setTimeout(function(){ $(".oneUtilityBarPanel").find("input:nth("+startIndex+2+")").focus().val(subject);}, 1500); // Subject
+        //logInfo("Setting role field"); setTimeout(function(){ $(".oneUtilityBarPanel").find("input:nth("+startIndex+3+")").val("SA");}, 2000); // Role
+        logInfo("Setting activity field"); setTimeout(function(){ $(".oneUtilityBarPanel").find("input:nth("+startIndex+3+")").val(activity);}, 2500); // Activity
+        logInfo("Setting time spent"); setTimeout(function(){ $(".oneUtilityBarPanel").find("input:nth("+startIndex+5+")").focus().val(timeSpent);}, 3000); // Time Spent
         logInfo("Clicking open selections"); setTimeout(function(){ $(".oneUtilityBarPanel").find("div").find(".slds-listbox__item").click();}, 6500); // Click all hovering items
         //setTimeout(function(){ $(".oneUtilityBarPanel").find("button:nth(5)").delay(7000).click();}, 2000); // Create button click
 
